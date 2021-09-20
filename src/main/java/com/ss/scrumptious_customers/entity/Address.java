@@ -12,6 +12,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+
+import org.springframework.lang.Nullable;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -21,8 +24,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Entity(name = "Address")
-@Table(name = "address")
+@Entity
+@Table(name = "ADDRESS")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -31,12 +34,16 @@ public class Address {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "addressid")
-    private UUID addressId;
+    @Column(name = "address_id", updatable = false)
+    private Long addressId;
 
-    private String line1;
-
-    private String line2;
+    @NotBlank
+    @Column(name="lineOne")
+	private String lineOne;
+	
+	@Nullable
+	@Column(name="lineTwo")
+	private String lineTwo;
 
     private String city;
 

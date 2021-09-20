@@ -1,7 +1,7 @@
 // package com.ss.scrumptious_customers.client.authentication;
 
 // import com.fasterxml.jackson.databind.ObjectMapper;
-// import com.ss.scrumptious_customers.client.AccountsClient;
+// import com.ss.scrumptious_customers.client.AuthClient;
 // import com.ss.scrumptious_customers.exception.AccountsClientException;
 // import com.ss.scrumptious_customers.exception.AuthenticationFailureException;
 
@@ -20,7 +20,7 @@
 // @RequiredArgsConstructor
 // public class ServiceAuthenticationProviderImpl implements ServiceAuthenticationProvider {
 
-//     private final AccountsClient accountsClient;
+//     private final AuthClient accountsClient;
 //     private final ObjectMapper objectMapper;
 //     private final ServiceAuthenticationConfiguration serviceAuthenticationConfiguration;
 //     private String authorizationHeader;

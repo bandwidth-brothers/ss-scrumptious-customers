@@ -21,18 +21,17 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
-@Entity(name = "Customer")
+@Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "customer")
+@Table(name = "CUSTOMER")
 @Builder
 public class Customer {
 
 
 	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(columnDefinition = "BINARY(16)", name = "customerid", updatable = false)
+	@Column(columnDefinition = "BINARY(16)", name = "customerid")
 	private UUID customerId;
 	
 	@NotBlank
@@ -47,6 +46,10 @@ public class Customer {
 	@Column(name = "phone", nullable = false)
 	private String phone;
 	
+	@NotBlank
+	@Column(name = "email", nullable = false)
+	private String email;
+	
 	//@NotBlank
 	@Column(name = "dob")//, nullable = false)
 	private Date dob;
@@ -60,7 +63,7 @@ public class Customer {
     @JoinTable(
         name = "customer_address",
         joinColumns = @JoinColumn(name = "customerid"),
-        inverseJoinColumns = @JoinColumn(name = "addressid"))
+        inverseJoinColumns = @JoinColumn(name = "address_id"))
     List<Address> addresses;
 	
 }
