@@ -20,7 +20,7 @@ import com.ss.scrumptious_customers.dto.CreateCustomerDto;
 import com.ss.scrumptious_customers.entity.Customer;
 import com.ss.scrumptious_customers.security.permissions.AdminOnlyPermission;
 import com.ss.scrumptious_customers.security.permissions.GetCustomerByIdPermission;
-import com.ss.scrumptious_customers.service.CustomerServiceImpl;
+import com.ss.scrumptious_customers.service.CustomerService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor 
 public class CustomerController {
 
-    private final CustomerServiceImpl customerService;
+    private final CustomerService customerService;
 
     
     @PostMapping("/register")

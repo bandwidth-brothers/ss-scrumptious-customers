@@ -41,7 +41,7 @@ public class CustomerServiceImpl implements CustomerService {
         System.out.println("cline id: "  + resp.getBody());
 
         Customer customer = Customer.builder()
-        		.customerId(resp.getBody())
+        		.id(resp.getBody())
                 .firstName(customerDto.getFirstName())
                 .lastName(customerDto.getLastName())
                 .email(customerDto.getEmail())
@@ -50,9 +50,9 @@ public class CustomerServiceImpl implements CustomerService {
         
         Customer customerRet = customerRepository.save(customer);
 
-        System.out.println("owner id: " + customerRet.getCustomerId());
+        System.out.println("owner id: " + customerRet.getId());
 
-        return customerRet.getCustomerId();
+        return customerRet.getId();
     }
 	
 	
