@@ -38,11 +38,11 @@ public class Address {
     private Long id;
 
     @NotBlank
-    @Column(name="line_one")
+    @Column(name="line1")
 	private String lineOne;
 	
 	@Nullable
-	@Column(name="line_two")
+	@Column(name="line2")
 	private String lineTwo;
 
     private String city;
