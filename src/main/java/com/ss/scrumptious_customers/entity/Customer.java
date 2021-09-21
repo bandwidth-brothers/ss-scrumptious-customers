@@ -31,15 +31,15 @@ public class Customer {
 
 
 	@Id
-	@Column(columnDefinition = "BINARY(16)", name = "customerid")
-	private UUID customerId;
+	@Column(columnDefinition = "BINARY(16)", name = "id")
+	private UUID id;
 	
 	@NotBlank
-	@Column(name = "firstname", nullable = false)
+	@Column(name = "first_name", nullable = false)
 	private String firstName;
 	
 	@NotBlank
-	@Column(name = "lastname", nullable = false)
+	@Column(name = "last_name", nullable = false)
 	private String lastName;
 	
 	@NotBlank
@@ -55,14 +55,14 @@ public class Customer {
 	private Date dob;
 	
 	@Builder.Default
-	@Column(name = "loyaltypoints", nullable = false)
+	@Column(name = "loyalty_points", nullable = false)
 	private Integer loyaltyPoints = 0;
 
 
     @ManyToMany
     @JoinTable(
         name = "customer_address",
-        joinColumns = @JoinColumn(name = "customerid"),
+        joinColumns = @JoinColumn(name = "customer_id"),
         inverseJoinColumns = @JoinColumn(name = "address_id"))
     List<Address> addresses;
 	

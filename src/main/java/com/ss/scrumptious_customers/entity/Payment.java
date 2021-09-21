@@ -17,18 +17,18 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PaymentMethod {
+public class Payment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
-    private UUID ownerId;
-
-    @NotNull
-    private String accountNum;
-
-    private String notes;
+//    @NotNull
+//    private UUID ownerId;
+//
+//    @NotNull
+//    private String accountNum;
+//
+//    private String notes;
 
 }
