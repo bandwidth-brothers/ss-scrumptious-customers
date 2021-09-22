@@ -10,7 +10,7 @@ public class AccountsClientException extends RuntimeException {
   private final transient ResponseEntity<UUID> response;
 
   public AccountsClientException(ResponseEntity<UUID> response) {
-    super("UUID returned from AccountsClient was null. Response status="
+    super("UUID returned from AuthClient was null. Response status="
               + response.getStatusCode().value());
     this.response = response;
   }
