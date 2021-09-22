@@ -32,7 +32,7 @@ public class CreateCustomerDto {
     @ToString.Exclude
     @NotNull
     @NotBlank(message = "Password cannot be blank.")
-    @Size(min = 10, message = "Length must be between 3 and 10 characters.")
+    @Size(min = 10, message = "Length at least 10 characters.")
     private String password;
 
     @NotNull

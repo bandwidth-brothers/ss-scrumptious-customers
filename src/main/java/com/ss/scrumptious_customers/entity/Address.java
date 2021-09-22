@@ -1,7 +1,6 @@
 package com.ss.scrumptious_customers.entity;
 
 import java.util.List;
-import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -39,11 +38,11 @@ public class Address {
 
     @NotBlank
     @Column(name="line1")
-	private String lineOne;
+	private String line1;
 	
 	@Nullable
 	@Column(name="line2")
-	private String lineTwo;
+	private String line2;
 
     private String city;
 
