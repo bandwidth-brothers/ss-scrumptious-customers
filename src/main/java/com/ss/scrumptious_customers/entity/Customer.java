@@ -1,17 +1,18 @@
 package com.ss.scrumptious_customers.entity;
 
 import java.sql.Date;
-import java.util.List;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
+
+import org.springframework.lang.Nullable;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,6 +32,10 @@ public class Customer {
 	@Id
 	@Column(columnDefinition = "BINARY(16)", name = "id")
 	private UUID id;
+
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "address_id", referencedColumnName = "id")
+    Address address;
 	
 	@NotBlank
 	@Column(name = "first_name", nullable = false)
@@ -44,6 +49,15 @@ public class Customer {
 	@Column(name = "phone", nullable = false)
 	private String phone;
 	
+	@Nullable
+	@Column(name = "picture")
+	private String picture;
+
+	// without columnDefinition = "TINYINT" mysql will default to bit(1)
+	@Builder.Default
+	@Column(name = "veteranary_status", columnDefinition = "TINYINT")
+	private Boolean veteranaryStatus = false;
+
 	@NotBlank
 	@Column(name = "email", nullable = false)
 	private String email;
@@ -57,11 +71,4 @@ public class Customer {
 	private Integer loyaltyPoints = 0;
 
 
-    @ManyToMany
-    @JoinTable(
-        name = "customer_address",
-        joinColumns = @JoinColumn(name = "customer_id"),
-        inverseJoinColumns = @JoinColumn(name = "address_id"))
-    List<Address> addresses;
-	
 }

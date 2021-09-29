@@ -1,5 +1,6 @@
 package com.ss.scrumptious_customers.dto;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -38,4 +39,10 @@ public class CreateCustomerDto {
     @NotNull
     @NotBlank
     private String phone;
+
+    private String picture;
+    private Boolean veteranaryStatus;
+
+    @Valid
+    private CreateAddressDto address;
 }

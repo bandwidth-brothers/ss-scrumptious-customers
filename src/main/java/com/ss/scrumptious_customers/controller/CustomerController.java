@@ -13,10 +13,12 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ss.scrumptious_customers.dto.CreateCustomerDto;
+import com.ss.scrumptious_customers.dto.UpdateCustomerDto;
 import com.ss.scrumptious_customers.entity.Customer;
 import com.ss.scrumptious_customers.security.permissions.AdminOnlyPermission;
 import com.ss.scrumptious_customers.security.permissions.GetCustomerByIdPermission;
@@ -30,15 +32,19 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor 
 public class CustomerController {
 
+    //TODO: add orders relation to delete all orders when deleting customer
+    //TODO: make api call to delete user when customer is deleted
+    //TODO: make api call to update user email when customer email is updated
+
     private final CustomerService customerService;
 
     
     @PostMapping("/register")
-	public ResponseEntity<UUID> createCustomer(
+	public ResponseEntity<Customer> createCustomer(
 			@Valid @RequestBody CreateCustomerDto createCustomerDto) {
 		System.out.println(createCustomerDto);
-		UUID uid = customerService.createNewCustomer(createCustomerDto);
-		return ResponseEntity.of(Optional.ofNullable(uid));
+		Customer customer = customerService.createNewCustomer(createCustomerDto);
+		return ResponseEntity.of(Optional.ofNullable(customer));
 	}
     
     
@@ -61,16 +67,15 @@ public class CustomerController {
         return ResponseEntity.of(Optional.ofNullable(customerService.getCustomerById(customerId)));
     }
 
-//    @GetCustomerByIdPermission
-//    @PutMapping(value = "/{customerId}",
-//        consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-//    public ResponseEntity<Void> updateExistingCustomer(@PathVariable UUID customerId,
-//                                                       @Valid @RequestBody
-//                                                           UpdateCustomerDto updateCustomerDto) {
-//      log.info("PUT Customer id=" + customerId);
-//      customerService.updateCustomer(customerId, updateCustomerDto);
-//      return ResponseEntity.noContent().build();
-//    }
+   @GetCustomerByIdPermission
+   @PutMapping(value = "/me/{customerId}",
+       consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+   public ResponseEntity<Customer> updateExistingCustomer(@PathVariable UUID customerId,
+                                                      @Valid @RequestBody
+                                                          UpdateCustomerDto updateCustomerDto) {
+     log.info("PUT Customer id=" + customerId);
+     return ResponseEntity.of(Optional.ofNullable(customerService.updateCustomer(customerId, updateCustomerDto)));
+   }
   
     @AdminOnlyPermission
     @DeleteMapping("/me/{customerId}")

@@ -1,21 +1,15 @@
 package com.ss.scrumptious_customers.entity;
 
-import java.util.List;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 import org.springframework.lang.Nullable;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,11 +18,10 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Entity
-@Table(name = "ADDRESS")
+@Table(name = "address")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "customers"})
 public class Address {
 
     @Id
@@ -46,10 +39,10 @@ public class Address {
 
     private String city;
 
+    @NotBlank(message = "State is mandatory")
+    @Size(min = 2, max = 2, message = "State must consist of only 2 characters.")
     private String state;
 
     private String zip;
 
-    @ManyToMany(mappedBy = "addresses", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    List<Customer> customers;
 }

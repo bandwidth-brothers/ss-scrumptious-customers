@@ -50,13 +50,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
             .cors().and().csrf().disable()
             .authorizeRequests()
-            // .antMatchers("/accounts/register/**").permitAll()
-            // .antMatchers("/test/**").permitAll()
-            // .antMatchers(HttpMethod.POST,"/login").permitAll()
-            // .antMatchers("/h2-console/*").permitAll()
-//                .antMatchers("/api/test/*").permitAll()
-//                .antMatchers("/api/management/*").hasRole("MANAGER")
-//                .antMatchers("/api/admin/*").hasRole("ADMIN")
             .antMatchers("/h2-console/*").permitAll()
             .antMatchers("/register/**").permitAll()
             .antMatchers(AUTH_WHITELIST).permitAll()
@@ -66,13 +59,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
-    @Bean
-    CorsConfigurationSource corsConfigurationSource() {
+    // @Bean
+    // CorsConfigurationSource corsConfigurationSource() {
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
-        return source;
-    }
+    //     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    //     source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
+    //     return source;
+    // }
 
 	@Bean PasswordEncoder passwordEncoder(){ 
 		return new BCryptPasswordEncoder();
