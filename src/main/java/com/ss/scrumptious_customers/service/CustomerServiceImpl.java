@@ -61,6 +61,9 @@ public class CustomerServiceImpl implements CustomerService {
 		if (createCustomerDto.getVeteranaryStatus() != null) {
 			customer.setVeteranaryStatus(createCustomerDto.getVeteranaryStatus());
 		}
+		if (createCustomerDto.getDob() != null) {
+			customer.setDob(createCustomerDto.getDob());
+		}
 
         return customerRepository.save(customer);
     }
@@ -86,12 +89,11 @@ public class CustomerServiceImpl implements CustomerService {
 	 */
 	@Override
 	public Customer getCustomerById(UUID customerId) {
-		notNull(customerId);
 		return customerRepository.findById(customerId).orElseThrow(() -> new NoSuchCustomerException(customerId));
 	}
 
 	@Override
-	public Customer updateCustomer(UUID customerId, @Valid UpdateCustomerDto updateCustomerDto) {
+	public void updateCustomer(UUID customerId, @Valid UpdateCustomerDto updateCustomerDto) {
 		Customer customer = getCustomerById(customerId);
 		if (updateCustomerDto.getFirstName() != null) {
 			customer.setFirstName(updateCustomerDto.getFirstName());
@@ -114,7 +116,10 @@ public class CustomerServiceImpl implements CustomerService {
 		if (updateCustomerDto.getAddress() != null) {
 			customer.setAddress(updateAddress(customer.getAddress().getId(), updateCustomerDto.getAddress()));
 		}
-		return customerRepository.save(customer);
+		if (updateCustomerDto.getDob() != null) {
+			customer.setDob(updateCustomerDto.getDob());
+		}
+		customerRepository.save(customer);
 	}
 
 	/**
@@ -124,22 +129,7 @@ public class CustomerServiceImpl implements CustomerService {
 	 */
 	@Override
 	public void removeCustomerById(UUID customerId) {
-		notNull(customerId);
-
 		customerRepository.findById(customerId).ifPresent(customerRepository::delete);
-	}
-
-	/**
-	 * Util method to check for null ID values.
-	 *
-	 * @param ids vararg ids to check.
-	 */
-	private void notNull(Object... ids) {
-		for (Object i : ids) {
-			if (i == null) {
-				throw new IllegalArgumentException("Expected value but received null.");
-			}
-		}
 	}
 
 
@@ -161,7 +151,6 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	public Address getAddressById(Long addressId) {
-		notNull(addressId);
 		return addressRepository.findById(addressId).orElseThrow(() -> new NoSuchAddressException(addressId));
 	}
 

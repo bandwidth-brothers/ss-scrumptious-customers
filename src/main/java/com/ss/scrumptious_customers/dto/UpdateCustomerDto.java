@@ -1,5 +1,7 @@
 package com.ss.scrumptious_customers.dto;
 
+import java.sql.Date;
+
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Pattern;
@@ -25,6 +27,7 @@ public class UpdateCustomerDto {
             message = "Phone number must be in the form ###-###-####.")
     private String phone;
 
+    private Date dob;
     private String picture;
     private Boolean veteranaryStatus;
 
