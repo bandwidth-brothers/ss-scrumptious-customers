@@ -81,6 +81,7 @@ public class CustomerController {
                                                       @Valid @RequestBody
                                                           UpdateCustomerDto updateCustomerDto) {
      log.info("PUT Customer id=" + customerId);
+     customerService.updateCustomer(customerId, updateCustomerDto);
      return ResponseEntity.noContent().build();
    }
   

@@ -2,6 +2,7 @@ package com.ss.scrumptious_customers.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -35,7 +36,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/webjars/**",
             // -- Swagger UI v3 (OpenAPI)
             "/v3/api-docs/**",
-            "/swagger-ui/**"
+            "/swagger-ui/**",
+            "/h2-console/**"
             // other public endpoints of your API may be appended to this array
     };
     
@@ -50,8 +52,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
             .cors().and().csrf().disable()
             .authorizeRequests()
-            .antMatchers("/h2-console/*").permitAll()
-            .antMatchers("/register/**").permitAll()
+            .antMatchers(HttpMethod.POST, "/customers").permitAll() // allow creation of customer
             .antMatchers(AUTH_WHITELIST).permitAll()
             .anyRequest().authenticated()
             .and()

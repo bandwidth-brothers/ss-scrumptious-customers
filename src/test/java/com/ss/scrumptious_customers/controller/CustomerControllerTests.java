@@ -17,7 +17,6 @@ import com.ss.scrumptious_customers.dto.UpdateAddressDto;
 import com.ss.scrumptious_customers.dto.UpdateCustomerDto;
 import com.ss.scrumptious_customers.entity.Address;
 import com.ss.scrumptious_customers.entity.Customer;
-import com.ss.scrumptious_customers.exception.NoSuchCustomerException;
 import com.ss.scrumptious_customers.service.CustomerService;
 
 import org.junit.jupiter.api.BeforeEach;
