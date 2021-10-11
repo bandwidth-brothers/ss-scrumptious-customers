@@ -11,12 +11,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.ss.scrumptious_customers.client.AuthClient;
+import com.ss.scrumptious_customers.dao.AddressRepository;
 //import com.ss.scrumptious_customers.client.authentication.ServiceAuthenticationProvider;
 import com.ss.scrumptious_customers.dao.CustomerRepository;
 import com.ss.scrumptious_customers.dto.AuthDto;
+import com.ss.scrumptious_customers.dto.CreateAddressDto;
 import com.ss.scrumptious_customers.dto.CreateCustomerDto;
+import com.ss.scrumptious_customers.dto.UpdateAddressDto;
 import com.ss.scrumptious_customers.dto.UpdateCustomerDto;
+import com.ss.scrumptious_customers.entity.Address;
 import com.ss.scrumptious_customers.entity.Customer;
+import com.ss.scrumptious_customers.exception.NoSuchAddressException;
 import com.ss.scrumptious_customers.exception.NoSuchCustomerException;
 
 import lombok.RequiredArgsConstructor;
@@ -28,11 +33,12 @@ public class CustomerServiceImpl implements CustomerService {
     private final AuthClient authClient;
 
 	private final CustomerRepository customerRepository;
+	private final AddressRepository addressRepository;
 
 	@Transactional
-	public UUID createNewCustomer(CreateCustomerDto customerDto) {
-        AuthDto authDto = AuthDto.builder().email(customerDto.getEmail())
-                .password(customerDto.getPassword()).build();
+	public Customer createNewCustomer(CreateCustomerDto createCustomerDto) {
+        AuthDto authDto = AuthDto.builder().email(createCustomerDto.getEmail())
+                .password(createCustomerDto.getPassword()).build();
         ResponseEntity<UUID> resp = authClient.createNewAccountCustomer(authDto);
         if (resp.getBody() == null){
             throw new IllegalStateException("Email is already in use");
@@ -42,17 +48,24 @@ public class CustomerServiceImpl implements CustomerService {
 
         Customer customer = Customer.builder()
         		.id(resp.getBody())
-                .firstName(customerDto.getFirstName())
-                .lastName(customerDto.getLastName())
-                .email(customerDto.getEmail())
-                .phone(customerDto.getPhone())
+                .firstName(createCustomerDto.getFirstName())
+                .lastName(createCustomerDto.getLastName())
+                .email(createCustomerDto.getEmail())
+                .phone(createCustomerDto.getPhone())
+				.address(createNewAddress(createCustomerDto.getAddress()))
                 .build();
-        
-        Customer customerRet = customerRepository.save(customer);
 
-        System.out.println("owner id: " + customerRet.getId());
+		if (createCustomerDto.getPicture() != null) {
+			customer.setPicture(createCustomerDto.getPicture());
+		}
+		if (createCustomerDto.getVeteranaryStatus() != null) {
+			customer.setVeteranaryStatus(createCustomerDto.getVeteranaryStatus());
+		}
+		if (createCustomerDto.getDob() != null) {
+			customer.setDob(createCustomerDto.getDob());
+		}
 
-        return customerRet.getId();
+        return customerRepository.save(customer);
     }
 	
 	
@@ -75,15 +88,38 @@ public class CustomerServiceImpl implements CustomerService {
 	 * @throws NoSuchCustomerException  if a customer with the ID cannot be found.
 	 */
 	@Override
-	public Customer getCustomerById(UUID id) {
-		notNull(id);
-		return customerRepository.findById(id).orElseThrow(() -> new NoSuchCustomerException(id));
+	public Customer getCustomerById(UUID customerId) {
+		return customerRepository.findById(customerId).orElseThrow(() -> new NoSuchCustomerException(customerId));
 	}
 
 	@Override
-	public Customer updateCustomer(UUID customerId, @Valid UpdateCustomerDto updateCustomerDto) {
-		// TODO Auto-generated method stub
-		return null;
+	public void updateCustomer(UUID customerId, @Valid UpdateCustomerDto updateCustomerDto) {
+		Customer customer = getCustomerById(customerId);
+		if (updateCustomerDto.getFirstName() != null) {
+			customer.setFirstName(updateCustomerDto.getFirstName());
+		}
+		if (updateCustomerDto.getLastName() != null) {
+			customer.setLastName(updateCustomerDto.getLastName());
+		}
+		if (updateCustomerDto.getEmail() != null) {
+			customer.setEmail(updateCustomerDto.getEmail());
+		}
+		if (updateCustomerDto.getPhone() != null) {
+			customer.setPhone(updateCustomerDto.getPhone());
+		}
+		if (updateCustomerDto.getPicture() != null) {
+			customer.setPicture(updateCustomerDto.getPicture());
+		}
+		if (updateCustomerDto.getVeteranaryStatus() != null) {
+			customer.setVeteranaryStatus(updateCustomerDto.getVeteranaryStatus());
+		}
+		if (updateCustomerDto.getAddress() != null) {
+			customer.setAddress(updateAddress(customer.getAddress().getId(), updateCustomerDto.getAddress()));
+		}
+		if (updateCustomerDto.getDob() != null) {
+			customer.setDob(updateCustomerDto.getDob());
+		}
+		customerRepository.save(customer);
 	}
 
 	/**
@@ -92,64 +128,52 @@ public class CustomerServiceImpl implements CustomerService {
 	 * @param id the ID of the customer to remove.
 	 */
 	@Override
-	public void removeCustomerById(UUID id) {
-		notNull(id);
-
-		customerRepository.findById(id).ifPresent(customerRepository::delete);
+	public void removeCustomerById(UUID customerId) {
+		customerRepository.findById(customerId).ifPresent(customerRepository::delete);
 	}
 
-//   @Override
-//   public Customer getCustomerByEmail(String email) {
-//     notNull(email);
-//     return customerRepository.findByEmail(email)
-//         .orElseThrow(() -> new NoSuchCustomerException(email));
-//   }
 
-//   /**
-//    * Updates an existing {@link Customer} account.
-//    *
-//    * @param updateCustomerDto The {@link Customer} account to update.
-//    * @return the updated {@link Customer} from saving changes.
-//    * @throws NoSuchCustomerException if no Customer found with the ID.
-//    * @throws DuplicateEmailException if a different record exists with the same email as the update
-//    *                                 information.
-//    */
-//   @Override
-//   public Customer updateCustomer(UUID customerId, @Valid UpdateCustomerDto updateCustomerDto) {
-//     notNull(customerId);
-
-//     var duplicateEmail = customerRepository.findByEmail(updateCustomerDto.getEmail())
-//         .stream()
-//         .anyMatch(customer -> !customer.getId().equals(customerId));
-
-//     if (duplicateEmail) {
-//       throw new DuplicateEmailException(updateCustomerDto.getEmail());
-//     }
-
-//     var oldValue = getCustomerById(customerId);
-//     var newValue = CustomerDtoMapper.map(updateCustomerDto);
-
-//     if (!oldValue.getEmail().equals(newValue.getEmail())) {
-//       var header = serviceAuthenticationProvider.getAuthorizationHeader();
-//       accountsClient.updateCustomerEmail(header, oldValue.getId(), newValue.getEmail());
-//     }
-
-//     // set from old payment methods or it'll be erased
-//     newValue.setPaymentMethods(oldValue.getPaymentMethods());
-//     newValue.setId(customerId);
-//     return customerRepository.save(newValue);
-//   }
-
-	/**
-	 * Util method to check for null ID values.
-	 *
-	 * @param ids vararg ids to check.
-	 */
-	private void notNull(Object... ids) {
-		for (Object i : ids) {
-			if (i == null) {
-				throw new IllegalArgumentException("Expected value but received null.");
-			}
+	@Override
+	public Address createNewAddress(CreateAddressDto createAddressDto) {
+		Address address = Address.builder()
+				.line1(createAddressDto.getLine1())
+				.city(createAddressDto.getCity())
+				.state(createAddressDto.getState())
+				.zip(createAddressDto.getZip())
+				.build();
+		
+		if (createAddressDto.getLine2() != null) {
+			address.setLine2(createAddressDto.getLine2());
 		}
+
+		return addressRepository.save(address);
+	}
+
+	@Override
+	public Address getAddressById(Long addressId) {
+		return addressRepository.findById(addressId).orElseThrow(() -> new NoSuchAddressException(addressId));
+	}
+
+
+	@Override
+	public Address updateAddress(Long addressId, UpdateAddressDto updateAddressDto) {
+		Address address = getAddressById(addressId);
+		// every field is optional so you have to check for null
+		if (updateAddressDto.getLine1() != null) {
+			address.setLine1(updateAddressDto.getLine1());
+		}
+		if (updateAddressDto.getLine2() != null) {
+			address.setLine2(updateAddressDto.getLine2());
+		}
+		if (updateAddressDto.getCity() != null) {
+			address.setCity(updateAddressDto.getCity());
+		}
+		if (updateAddressDto.getState() != null) {
+			address.setState(updateAddressDto.getState());
+		}
+		if (updateAddressDto.getZip() != null) {
+			address.setZip(updateAddressDto.getZip());
+		}
+		return addressRepository.save(address);
 	}
 }

@@ -5,7 +5,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * To be thrown when a {@link com.ss.utopia.customer.entity.Customer} cannot be found.
+ * To be thrown when a {@link com.ss.scrumptious_customers.entity.Customer} cannot be found.
  *
  * <p>Contains the offending ID that can be retrieved with {@link #getCustomerId()}.
  */

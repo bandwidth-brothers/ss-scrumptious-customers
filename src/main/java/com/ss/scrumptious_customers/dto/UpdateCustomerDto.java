@@ -1,9 +1,10 @@
 package com.ss.scrumptious_customers.dto;
 
+import java.sql.Date;
+
+import javax.validation.Valid;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,35 +16,22 @@ import lombok.NoArgsConstructor;
 @Builder
 public class UpdateCustomerDto {
 
-    @NotBlank(message = "First name is mandatory")
     private String firstName;
 
-    @NotBlank(message = "Last name is mandatory")
     private String lastName;
 
-    @NotBlank
     @Email(message = "Email is invalid")
     private String email;
 
     @Pattern(regexp = "^\\d{3}-\\d{3}-\\d{4}$",
             message = "Phone number must be in the form ###-###-####.")
-    private String phoneNumber;
+    private String phone;
 
-    @NotBlank(message = "Address line1 is mandatory")
-    private String addrLine1;
+    private Date dob;
+    private String picture;
+    private Boolean veteranaryStatus;
 
-    private String addrLine2;
-
-    @NotBlank(message = "City is mandatory")
-    private String city;
-
-    @NotBlank(message = "State is mandatory")
-    @Size(min = 2, max = 2, message = "State must consist of only 2 characters.")
-    private String state;
-
-    @NotBlank(message = "Zipcode is mandatory")
-    @Pattern(regexp = "^\\d{5}(?:[-\\s]\\d{4})?$",
-        message = "Zipcode does not meet expected format: '#####-####' or '#####'")
-    private String zipcode;
+    @Valid
+    private UpdateAddressDto address;
     
 }
