@@ -1,24 +1,12 @@
 package com.ss.scrumptious_customers.controller;
 
-import static org.mockito.Mockito.when;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
-
+import com.ss.scrumptious.common_entities.entity.Address;
+import com.ss.scrumptious.common_entities.entity.Customer;
 import com.ss.scrumptious_customers.dto.CreateAddressDto;
 import com.ss.scrumptious_customers.dto.CreateCustomerDto;
 import com.ss.scrumptious_customers.dto.UpdateAddressDto;
 import com.ss.scrumptious_customers.dto.UpdateCustomerDto;
-import com.ss.scrumptious_customers.entity.Address;
-import com.ss.scrumptious_customers.entity.Customer;
 import com.ss.scrumptious_customers.service.CustomerService;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -32,6 +20,17 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
+
+import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -75,7 +74,7 @@ public class CustomerControllerTests {
         validAddress.setZip("12345");
 
         validCustomer.setAddress(validAddress);
-  
+
       // setup DTOs
         validUpdateCustomerDto = UpdateCustomerDto.builder()
             .firstName(validCustomer.getFirstName())
@@ -89,8 +88,8 @@ public class CustomerControllerTests {
                 .zip(validAddress.getZip())
                 .build())
             .build();
-  
-  
+
+
         validCreateCustomerDto = CreateCustomerDto.builder()
             .firstName(validCustomer.getFirstName())
             .lastName(validCustomer.getLastName())
@@ -121,7 +120,7 @@ public class CustomerControllerTests {
         List<Customer> customers = new ArrayList<>();
         customers.add(validCustomer);
         when(customerService.getAllCustomers()).thenReturn(customers);
-        
+
         mvc.perform(get("/customers"))
         .andExpect(status().is(200))
         .andExpect(jsonPath("$.[0]firstName").value(validCustomer.getFirstName()));
@@ -138,7 +137,7 @@ public class CustomerControllerTests {
     @Test
     public void getAllCustomersEmpty() throws Exception {
         when(customerService.getAllCustomers()).thenReturn(Collections.emptyList());
-        
+
         mvc.perform(get("/customers"))
         .andExpect(status().is(204));
     }
@@ -152,7 +151,7 @@ public class CustomerControllerTests {
         .andExpect(status().is(200))
         .andExpect(jsonPath("$.firstName").value(validCustomer.getFirstName()));
     }
-    
+
     @WithMockUser(roles = "ADMIN")
     @Test
     void getCustomerByIdNotExist() throws Exception {

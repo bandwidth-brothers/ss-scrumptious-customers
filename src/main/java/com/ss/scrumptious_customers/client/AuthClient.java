@@ -11,17 +11,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.ss.scrumptious_customers.dto.AuthDto;
 
- @FeignClient("scrumptious-auth-service")
+ @FeignClient(name = "auth-service", url = "${base.url}")
  public interface AuthClient {
 
 	 @PostMapping(value = "/auth/customer/register")
 	 ResponseEntity<UUID> createNewAccountCustomer(@Valid @RequestBody AuthDto authDto);
-
-//   @PutMapping(value = EndpointConstants.API_V_0_1_ACCOUNTS + "/customer/{customerId}",
-//       consumes = MediaType.TEXT_PLAIN_VALUE)
-//   ResponseEntity<Void> updateCustomerEmail(@RequestHeader(value = "Authorization")
-//                                         String authorizationHeader,
-//                                         @PathVariable UUID customerId,
-//                                         @RequestBody String newEmail);
 
  }

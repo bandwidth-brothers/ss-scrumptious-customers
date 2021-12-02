@@ -1,30 +1,24 @@
 package com.ss.scrumptious_customers.service;
 
-import java.util.List;
-import java.util.UUID;
+import com.ss.scrumptious.common_entities.entity.Address;
+import com.ss.scrumptious.common_entities.entity.Customer;
+import com.ss.scrumptious_customers.client.AuthClient;
+import com.ss.scrumptious_customers.dao.AddressRepository;
+import com.ss.scrumptious_customers.dao.CustomerRepository;
+import com.ss.scrumptious_customers.dto.*;
+import com.ss.scrumptious_customers.exception.NoSuchAddressException;
+import com.ss.scrumptious_customers.exception.NoSuchCustomerException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import java.util.List;
+import java.util.UUID;
 
-import org.springframework.http.ResponseEntity;
 //import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-
-import com.ss.scrumptious_customers.client.AuthClient;
-import com.ss.scrumptious_customers.dao.AddressRepository;
 //import com.ss.scrumptious_customers.client.authentication.ServiceAuthenticationProvider;
-import com.ss.scrumptious_customers.dao.CustomerRepository;
-import com.ss.scrumptious_customers.dto.AuthDto;
-import com.ss.scrumptious_customers.dto.CreateAddressDto;
-import com.ss.scrumptious_customers.dto.CreateCustomerDto;
-import com.ss.scrumptious_customers.dto.UpdateAddressDto;
-import com.ss.scrumptious_customers.dto.UpdateCustomerDto;
-import com.ss.scrumptious_customers.entity.Address;
-import com.ss.scrumptious_customers.entity.Customer;
-import com.ss.scrumptious_customers.exception.NoSuchAddressException;
-import com.ss.scrumptious_customers.exception.NoSuchCustomerException;
-
-import lombok.RequiredArgsConstructor;
 
 //@Slf4j
 @Service
@@ -59,7 +53,7 @@ public class CustomerServiceImpl implements CustomerService {
 			customer.setPicture(createCustomerDto.getPicture());
 		}
 		if (createCustomerDto.getVeteranaryStatus() != null) {
-			customer.setVeteranaryStatus(createCustomerDto.getVeteranaryStatus());
+			customer.setVeteranStatus(createCustomerDto.getVeteranaryStatus());
 		}
 		if (createCustomerDto.getDob() != null) {
 			customer.setDob(createCustomerDto.getDob());
@@ -67,8 +61,8 @@ public class CustomerServiceImpl implements CustomerService {
 
         return customerRepository.save(customer);
     }
-	
-	
+
+
 	/**
 	 * Gets all {@link Customer} records.
 	 *
@@ -111,7 +105,7 @@ public class CustomerServiceImpl implements CustomerService {
 			customer.setPicture(updateCustomerDto.getPicture());
 		}
 		if (updateCustomerDto.getVeteranaryStatus() != null) {
-			customer.setVeteranaryStatus(updateCustomerDto.getVeteranaryStatus());
+			customer.setVeteranStatus(updateCustomerDto.getVeteranaryStatus());
 		}
 		if (updateCustomerDto.getAddress() != null) {
 			customer.setAddress(updateAddress(customer.getAddress().getId(), updateCustomerDto.getAddress()));
@@ -141,7 +135,7 @@ public class CustomerServiceImpl implements CustomerService {
 				.state(createAddressDto.getState())
 				.zip(createAddressDto.getZip())
 				.build();
-		
+
 		if (createAddressDto.getLine2() != null) {
 			address.setLine2(createAddressDto.getLine2());
 		}

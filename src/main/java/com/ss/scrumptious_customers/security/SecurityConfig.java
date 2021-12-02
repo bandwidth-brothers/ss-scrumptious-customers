@@ -40,7 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/h2-console/**"
             // other public endpoints of your API may be appended to this array
     };
-    
+
     @Override
     public void configure(WebSecurity web) throws Exception {
         //web.ignoring().antMatchers("/swagger-ui/**", "/v3/api-docs/**");
@@ -52,7 +52,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
             .cors().and().csrf().disable()
             .authorizeRequests()
-            .antMatchers(HttpMethod.POST, "/customers").permitAll() // allow creation of customer
+            .antMatchers(HttpMethod.POST, "/customers").permitAll() // allow creation of custome
+            .antMatchers( HttpMethod.GET,"/customers/health").permitAll()
             .antMatchers(AUTH_WHITELIST).permitAll()
             .anyRequest().authenticated()
             .and()
@@ -60,15 +61,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
-    // @Bean
-    // CorsConfigurationSource corsConfigurationSource() {
+     @Bean
+     CorsConfigurationSource corsConfigurationSource() {
 
-    //     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    //     source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
-    //     return source;
-    // }
+         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+         source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
+         return source;
+     }
 
-	@Bean PasswordEncoder passwordEncoder(){ 
+	@Bean PasswordEncoder passwordEncoder(){
 		return new BCryptPasswordEncoder();
 	}
 

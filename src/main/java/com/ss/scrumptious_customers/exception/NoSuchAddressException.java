@@ -4,7 +4,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 /**
- * To be thrown when a {@link com.ss.scrumptious_customers.entity.Address} cannot be found.
+ * To be thrown when a {@link com.ss.scrumptious.common_entities.entity.Address} cannot be found.
  *
  * <p>Contains the offending ID that can be retrieved with {@link #getAddressId()}.
  */

@@ -1,39 +1,29 @@
 package com.ss.scrumptious_customers.controller;
 
+import com.ss.scrumptious.common_entities.entity.Customer;
+import com.ss.scrumptious_customers.dto.CreateCustomerDto;
+import com.ss.scrumptious_customers.dto.UpdateCustomerDto;
+import com.ss.scrumptious_customers.security.permissions.AdminOnlyPermission;
+import com.ss.scrumptious_customers.security.permissions.GetCustomerByIdPermission;
+import com.ss.scrumptious_customers.service.CustomerService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import javax.validation.Valid;
-
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import com.ss.scrumptious_customers.dto.CreateCustomerDto;
-import com.ss.scrumptious_customers.dto.UpdateCustomerDto;
-import com.ss.scrumptious_customers.entity.Customer;
-import com.ss.scrumptious_customers.security.permissions.AdminOnlyPermission;
-import com.ss.scrumptious_customers.security.permissions.GetCustomerByIdPermission;
-import com.ss.scrumptious_customers.service.CustomerService;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
 @Slf4j
 @RestController
 @RequestMapping("/customers")
-@RequiredArgsConstructor 
+@RequiredArgsConstructor
 public class CustomerController {
 
     //TODO: add orders relation to delete all orders when deleting customer
@@ -43,7 +33,7 @@ public class CustomerController {
 
     private final CustomerService customerService;
 
-    
+
     @PostMapping
 	public ResponseEntity<Void> createCustomer(
 			@Valid @RequestBody CreateCustomerDto createCustomerDto) {
@@ -53,8 +43,8 @@ public class CustomerController {
                 .buildAndExpand(customer.getId()).toUri();
         return ResponseEntity.created(location).build();
 	}
-    
-    
+
+
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<List<Customer>> getAllCustomers() {
@@ -84,7 +74,7 @@ public class CustomerController {
      customerService.updateCustomer(customerId, updateCustomerDto);
      return ResponseEntity.noContent().build();
    }
-  
+
     @AdminOnlyPermission
     @DeleteMapping("/{customerId}")
     public ResponseEntity<String> deleteCustomer(@PathVariable UUID customerId) {
