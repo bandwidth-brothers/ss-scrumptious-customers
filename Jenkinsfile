@@ -28,7 +28,6 @@ pipeline{
                     writeFile file: "${files[0].path}", text: readContent+"""\r\nspring.datasource.username=${DB_USERNAME}
                                                                                               \r\nspring.datasource.password=${DB_PASSWORD}
                                                                                               \r\nspring.datasource.url=${DB_ENDPOINT}
-                                                                                              \r\nbase.url ==${BASE_URL}
                                                                                               """
                     def str=readFile file: "${files[0].path}"
                     echo str
