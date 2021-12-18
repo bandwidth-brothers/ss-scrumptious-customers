@@ -6,7 +6,6 @@ pipeline{
           DB_ENDPOINT = credentials('DB_ENDPOINT')
           DB_USERNAME = credentials('DB_USERNAME')
           DB_PASSWORD = credentials('DB_PASSWORD')
-          BASE_URL = credentials('BASE_URL')
   }
 
       tools
@@ -28,7 +27,6 @@ pipeline{
                     writeFile file: "${files[0].path}", text: readContent+"""\r\nspring.datasource.username=${DB_USERNAME}
                                                                                               \r\nspring.datasource.password=${DB_PASSWORD}
                                                                                               \r\nspring.datasource.url=${DB_ENDPOINT}
-                                                                                              \r\nbase.url=${BASE_URL}
                                                                                               """
                     def str=readFile file: "${files[0].path}"
                     echo str

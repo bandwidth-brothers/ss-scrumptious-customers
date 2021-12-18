@@ -50,24 +50,27 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         http
-            .cors().and().csrf().disable()
+            .csrf().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).
+            and().cors().and()
             .authorizeRequests()
-            .antMatchers(HttpMethod.POST, "/customers").permitAll() // allow creation of custome
+            .antMatchers(HttpMethod.POST, "/customers").permitAll() // allow creation of customer
             .antMatchers( HttpMethod.GET,"/customers/health").permitAll()
             .antMatchers(AUTH_WHITELIST).permitAll()
             .anyRequest().authenticated()
             .and()
-            .addFilter(new JwtAuthenticationVerificationFilter(authenticationManager(), securityConstants))
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+            .addFilter(new JwtAuthenticationVerificationFilter(authenticationManager(), securityConstants));
     }
 
-     @Bean
-     CorsConfigurationSource corsConfigurationSource() {
-
-         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-         source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
-         return source;
-     }
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration().applyPermitDefaultValues();
+        config.addAllowedOrigin("*");
+        config.addAllowedMethod(HttpMethod.PUT);
+        config.addAllowedMethod(HttpMethod.DELETE);
+        source.registerCorsConfiguration("/**", config);
+        return source;
+    }
 
 	@Bean PasswordEncoder passwordEncoder(){
 		return new BCryptPasswordEncoder();
