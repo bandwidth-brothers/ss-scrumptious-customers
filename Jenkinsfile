@@ -35,22 +35,12 @@ pipeline{
 
     	   }
 
-		stage('Package'){
-			steps{
-				sh 'mvn clean package -Dmaven.test.skip'
-			}
-		}
-
-		stage('Deploy'){
-			steps{
-				sh "docker build -t customer-service-john ."
-				script{
-					docker.withRegistry("https://419106922284.dkr.ecr.us-east-2.amazonaws.com/","ecr:us-east-2:ecr_credentials"){
-						docker.image("customer-service-john").push()
-					}
-				}
-				sh "docker system prune -fa"
-			}
-		}
+            stage('Analysis'){
+                steps {
+                    withSonarQubeEnv('jenkins-sonar') {
+                        sh 'mvn sonar:sonar'
+                    }
+                }
+            }
 	}
 }
