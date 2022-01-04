@@ -38,7 +38,7 @@ pipeline{
             stage('Analysis'){
                 steps {
                     withSonarQubeEnv('jenkins-sonar') {
-                        sh 'mvn sonar:sonar'
+                        sh 'mvn clean sonar:sonar'
                     }
                 }
             }
